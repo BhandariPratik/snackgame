@@ -79,13 +79,13 @@ export default function Home() {
     return () => clearInterval(interval);
   }, [running, direction, food, gameOver]);
 
-  const generateFood = () => {
-    let newFoodPosition;
-    do {
-      newFoodPosition = getRandomPosition();
-    } while (snake.some(segment => segment.row === newFoodPosition.row && segment.col === newFoodPosition.col));
-    setFood(newFoodPosition);
-  };
+ function generateFood() {
+  let newFoodPosition;
+  do {
+    newFoodPosition = getRandomPosition();
+  } while (snake.some(segment => segment.row === newFoodPosition.row && segment.col === newFoodPosition.col));
+  setFood(newFoodPosition);
+}
 
   const createBoard = () => {
     let board = [];
