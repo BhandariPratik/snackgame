@@ -2,31 +2,48 @@
 import React, { useState, useEffect } from "react";
 
 export default function Home() {
-  let rows = 10;
+ 
+ let rows = 10;
   let cols = 20;
 
-
-  const getRandomPosition = () => ({
-    row: Math.floor(Math.random() * rows),
-    col: Math.floor(Math.random() * cols),
-  });
-
+ 
   const [snake, setSnake] = useState([
     { row: 7, col: 5 },
     { row: 7, col: 4 },
     { row: 7, col: 3 },
     { row: 7, col: 2 },
   ]);
+
+  console.log('snake position==>', snake)
+
   const [direction, setDirection] = useState({ row: 0, col: 1 });
-  const [food, setFood] = useState(getRandomPosition());
+  const [food, setFood] = useState({ row: '', col: '' });
+  console.log('food==>>>==>', food)
   const [score, setScore] = useState(0);
+  console.log('score===>', score)
   const [gameOver, setGameOver] = useState(false);
   const [running, setRunning] = useState(false);
+ 
+  const getRandomPosition = () => (
+    {
+   row: Math.floor(Math.random() * rows),
+   col: Math.floor(Math.random() * cols),
+ });
 
 
+  const generateFood = () => {
+    let newFoodPosition;
+    do {
+      newFoodPosition = getRandomPosition();
+    } while (snake.some(para => para.row === newFoodPosition.row && para.col === newFoodPosition.col));
+    setFood(newFoodPosition);
+  }
 
-
+  
   useEffect(() => {
+
+    generateFood();
+
     const handleDirection = (event) => {
       switch (event.key) {
         case 'ArrowUp':
@@ -60,7 +77,7 @@ export default function Home() {
           col: (prev[0].col + direction.col + cols) % cols,
         };
 
-        if (prev.some(segment => segment.row === newHead.row && segment.col === newHead.col)) {
+        if (prev.some(para => para.row === newHead.row && para.col === newHead.col)) {
           setGameOver(true);
           setRunning(false);
           return prev;
@@ -79,21 +96,14 @@ export default function Home() {
     return () => clearInterval(interval);
   }, [running, direction, food, gameOver]);
 
- function generateFood() {
-  let newFoodPosition;
-  do {
-    newFoodPosition = getRandomPosition();
-  } while (snake.some(segment => segment.row === newFoodPosition.row && segment.col === newFoodPosition.col));
-  setFood(newFoodPosition);
-}
 
   const createBoard = () => {
     let board = [];
     for (let i = 0; i < rows; i++) {
       let row = [];
       for (let j = 0; j < cols; j++) {
-        const isSnake = snake.some(data => data.row === i && data.col === j);
-        const isFood = food.row === i && food.col === j;
+        let isSnake = snake.some(data => data.row === i && data.col === j);
+        let isFood = food.row === i && food.col === j;
         row.push(
           <div
             key={`${i}-${j}`}
@@ -121,7 +131,7 @@ export default function Home() {
       ]);
       setScore(0);
       setDirection({ row: 0, col: 1 });
-      setFood(getRandomPosition());
+      generateFood();
     }
     setRunning(!running);
   };
