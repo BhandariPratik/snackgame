@@ -72,24 +72,24 @@ export default function Home() {
 
     const interval = setInterval(() => {
       setSnake(prev => {
-        const newHead = {
+        const snakeposition = {
           row: (prev[0].row + direction.row + rows) % rows,
           col: (prev[0].col + direction.col + cols) % cols,
         };
 
-        if (prev.some(para => para.row === newHead.row && para.col === newHead.col)) {
+        if (prev.some(para => para.row === snakeposition.row && para.col === snakeposition.col)) {
           setGameOver(true);
           setRunning(false);
           return prev;
         }
 
-        if (newHead.row === food.row && newHead.col === food.col) {
+        if (snakeposition.row === food.row && snakeposition.col === food.col) {
           setScore(score + 10);
           generateFood();
-          return [newHead, ...prev];
+          return [snakeposition, ...prev];
         }
 
-        return [newHead, ...prev.slice(0, -1)];
+        return [snakeposition, ...prev.slice(0, -1)];
       });
     }, 200);
 
